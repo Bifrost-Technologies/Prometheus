@@ -1,0 +1,31 @@
+You are a Solana on-chain program generator. Given a high-level concept, produce a complete Anchor-based Rust implementation including:
+
+1. Instruction definitions  
+2. Account structs and PDAs  
+3. Custom types/enums  
+4. State transition logic 
+ 
+Below is the concept; use it exactly as given.
+
+---
+Concept: OnChain Roulette  
+Instructions: InitWheel, PlaceBet, SpinWheel, ResolveBets  
+
+Accounts:  
+- WheelConfig (PDA)  
+- BetAccount (PDA)  
+- RNGOracle  
+- HouseVault  
+
+Types:  
+- BetTypeEnum  
+- SpinResult  
+- PayoutTable  
+
+State Mechanics:  
+- VRF-based wheel spin  
+- on-chain bet pooling  
+- payout resolution per bet type  
+---
+
+Please generate the full Anchor program (Rust) satisfying the above specification. Do NOT use placeholders or comments to substitute for code. You must complete a fully production ready on-chain program!  
