@@ -4,8 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Prometheus.Server;
 using System;
 
-Prometheus.Server.Prometheus.InitializeAI();
-Prometheus.Server.Prometheus.Living();
+//Prometheus.Server.Prometheus.InitializeAI();
+//Prometheus.Server.Prometheus.Living();
 
 var builder = WebApplication.CreateBuilder(args);
 
