@@ -150,14 +150,3 @@ These can be edited to adjust assistant behavior or to add new canned prompts fo
 
 - Add features or fixes via branches targeted at `main`.
 - Run server and client locally, add tests where appropriate, and keep changes small and focused.
-
-## Suggested next docs to add (I can create these on request)
-
-- API reference (endpoints, request/response shapes).
-- Deployment guide (Windows service, Docker, or cloud hosting + environment setup).
-- Architecture diagram (visual), and how Semantic Kernel flows are organized.
-
-- Generate a brief `CONTRIBUTING.md` or a more detailed `README.md` replacing the repo root README.
-- Produce an OpenAPI/Swagger summary by scanning controller code.
-
-Tell me which next step to take.
