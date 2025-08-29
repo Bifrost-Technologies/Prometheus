@@ -77,7 +77,7 @@ In short: the system prompt is both the behavioral policy (what the assistant sh
 
 Because the platform treats the system prompt as data, teams can swap, version, and A/B test different prompts to change assistant behavior without changing server code.
 
-## Practical checklist to turn generated outputs into a reusable dataset
+### Practical checklist to turn generated outputs into a reusable dataset
 
 1. Store each generation as a single record containing:
   - system_prompt_id (or full text), user_prompt, model_id, timestamp
@@ -87,52 +87,18 @@ Because the platform treats the system prompt as data, teams can swap, version, 
 3. Normalize: apply formatting, remove environment-specific paths/keys, and canonicalize timestamps
 4. Export JSONL lines; each line is one training example for supervised fine-tuning or instruction tuning
 
-## Developer guidance: verify and adopt generated code
+### Developer guidance: verify and adopt generated code
 
 - Always run `cargo fmt` and `cargo clippy` on generated Rust code and run `cargo check` before merging generated sources.
 - Use the platform's blueprint tags and the server's parsing utilities (if present) to import code in a deterministic way.
 - Treat generated code as a first-class artifact: add unit tests or quick integration checks to ensure semantics match expectations.
 
-## Example workflow: generate → validate → integrate
+### Example workflow: generate → validate → integrate
 
 1. From the client or API, send a user prompt and choose the `prometheus-system-prompt.txt` policy.
 2. Receive a blueprint-wrapped response containing multiple source files.
 3. Parse the blueprint, write the files to a preview project, run `cargo check` and `rustfmt`.
 4. If validated, commit to a feature branch and run CI; if not, request a follow-up prompt to fix issues.
-
-## IDE Friendly
-- Visual Studio 2022
-- VS Code
-
-## How to run locally (Windows PowerShell)
-
-Run the server (from repository root):
-
-```powershell
-# Build and run the ASP.NET server
-cd .\Prometheus.Server
-dotnet build
-dotnet run --project .\Prometheus.Server.csproj
-```
-
-Run the client (in another shell):
-
-```powershell
-cd .\prometheus.client
-npm install
-npm run dev
-```
-
-Notes:
-- The server reads configuration from `appsettings.json` and `appsettings.Development.json`.
-- If using cloud AI services, ensure relevant API keys and connection strings are set in environment variables or `appsettings`.
-
-## Where prompts and test data live
-
-- System prompt: `Prometheus.Server/prompts/prometheus-system-prompt.txt`.
-- Factory prompts: `Prometheus.Server/prompts/factory_prompts/` (numbered text files).
-
-These can be edited to adjust assistant behavior or to add new canned prompts for testing.
 
 ### How to train & fine-tune models using Prometheus
 
@@ -180,6 +146,41 @@ CUDA_VISIBLE_DEVICES=0 python standard_SFT_finetune.py
 ```bash
 accelerate launch standard_SFT_finetune.py
 ```
+
+### IDE Friendly
+- Visual Studio 2022
+- VS Code
+
+## How to run locally (Windows PowerShell)
+
+Run the server (from repository root):
+
+```powershell
+# Build and run the ASP.NET server
+cd .\Prometheus.Server
+dotnet build
+dotnet run --project .\Prometheus.Server.csproj
+```
+
+Run the client (in another shell):
+
+```powershell
+cd .\prometheus.client
+npm install
+npm run dev
+```
+
+Notes:
+- The server reads configuration from `appsettings.json` and `appsettings.Development.json`.
+- If using cloud AI services, ensure relevant API keys and connection strings are set in environment variables or `appsettings`.
+
+### Where prompts and test data live
+
+- System prompt: `Prometheus.Server/prompts/prometheus-system-prompt.txt`.
+- Factory prompts: `Prometheus.Server/prompts/factory_prompts/` (numbered text files).
+
+These can be edited to adjust assistant behavior or to add new canned prompts for testing.
+
 
 ## Development notes & tips
 
