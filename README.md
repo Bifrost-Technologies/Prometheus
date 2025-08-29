@@ -134,6 +134,53 @@ Notes:
 
 These can be edited to adjust assistant behavior or to add new canned prompts for testing.
 
+### How to train & fine-tune models using Prometheus
+
+This repository includes a helper script, `standard_SFT_finetune.py`, that runs supervised fine-tuning (SFT) of a causal language model using the TRL (SFTTrainer) workflow. Use it to produce a tuned assistant from example Instruction → Output pairs (supervised instruction tuning).
+
+What it does
+- Loads a pretrained causal LM checkpoint (configurable via `checkpoint_path`).
+- Loads a dataset (the script uses the Hugging Face dataset `Bifrost-AI/Solana-Vanguard-Challenge` by default).
+- Applies a simple formatting function that turns each example into "### Question: … ### Answer: …".
+- Creates a TrainingArguments object and runs TRL.SFTTrainer to perform supervised fine-tuning.
+- Saves model weights, training metrics, and trainer state to `output_dir`.
+
+Quick prerequisites
+- Python 3.8+ (3.10/3.11 recommended).
+- A CUDA-enabled GPU and matching PyTorch build (the script uses bfloat16; a GPU and drivers that support bfloat16 are recommended).
+- Install core packages:
+    - transformers
+    - datasets
+    - torch
+    - trl
+    - accelerate (optional, for multi-GPU / distributed)
+Install example:
+```bash
+pip install transformers datasets torch trl accelerate
+```
+(If you need a specific PyTorch+CUDA wheel, install per PyTorch instructions.)
+
+Where to configure
+- checkpoint_path — set to the HF model id or a local path. Pick a model that fits your hardware.
+- model_kwargs — control dtype, device_map, trust_remote_code, etc. Switch to device_map="auto" or use accelerate/deepspeed for multi-GPU / offloading.
+- training_config — modify learning rate, batch size, gradient accumulation, bf16/fp16 flags, max_steps / num_train_epochs, output_dir, and save settings.
+- formatting_func — adapt to your dataset shape. Current function expects dataset fields named "Instruction" and "Output".
+- train_dataset — change `load_dataset(...)` to your dataset or to a local JSON/JSONL file. Ensure the target columns exist.
+
+How to run
+- From a terminal in the repo (or the directory containing the script):
+```bash
+python path/to/standard_SFT_finetune.py
+```
+- For specific GPU selection:
+```bash
+CUDA_VISIBLE_DEVICES=0 python standard_SFT_finetune.py
+```
+- If training large models across multiple GPUs, prefer using `accelerate launch` or Deepspeed and update TrainingArguments/device_map accordingly:
+```bash
+accelerate launch standard_SFT_finetune.py
+```
+
 ## Development notes & tips
 
 - API controller(s) are in `Prometheus.Server/Controllers/` — inspect `API_Controller.cs` to see available endpoints and request/response contracts.
@@ -145,6 +192,9 @@ These can be edited to adjust assistant behavior or to add new canned prompts fo
 
 - Do not commit secrets to the repo. Use `appsettings.Development.json` locally or environment variables for API keys.
 - Validate CORS and frontend origins when deploying to production.
+
+
+
 
 ## Contributing
 
